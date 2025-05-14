@@ -22,4 +22,6 @@ jobs:
         run: pip install requests beautifulsoup4
 
       - name: Run monitor script
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: python web_monitor.py
