@@ -1,27 +1,25 @@
-name: Web Monitor
+name: Kontrollera produktstatus
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  # kör var 5:e minut
-  workflow_dispatch:      # så du kan köra manuellt också
+    - cron: '*/5 * * * *'  # Kör var 5:e minut
+  workflow_dispatch:      # Gör det möjligt att köra manuellt
 
 jobs:
-  run-monitor:
+  check_status:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+    - name: Klona repot
+      uses: actions/checkout@v3
 
-      - name: Install Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
+    - name: Installera Python + Playwright
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        python -m playwright install --with-deps
 
-      - name: Install dependencies
-        run: pip install requests beautifulsoup4
-
-      - name: Run monitor script
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        run: python web-monitor.py
+    - name: Kör bevakningsskriptet
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      run: python web-monitor.py
