@@ -38,7 +38,9 @@ jobs:
       uses: actions/cache@v4
       with:
         path: status_hash.txt
-        key: status-hash
+        key: status-hash-${{ hashFiles('status_hash.txt') }}
+        restore-keys: |
+          status-hash-
 
     - name: Installera beroenden
       run: |
