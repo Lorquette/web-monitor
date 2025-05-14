@@ -1,0 +1,25 @@
+name: Web Monitor
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # kör var 5:e minut
+  workflow_dispatch:      # så du kan köra manuellt också
+
+jobs:
+  run-monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Run monitor script
+        run: python web_monitor.py
