@@ -17,7 +17,8 @@ def get_availability_status():
         page.wait_for_timeout(3000)  # Vänta så JS hinner ladda
 
         try:
-            button = page.locator("button.text-btn span")
+            # Sök efter knappen inom rätt div
+            button = page.locator("div#add-product-to-cart button.text-btn._disabled span")
             if button.count() > 0:
                 return button.first.inner_text().strip()
             else:
