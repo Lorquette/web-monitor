@@ -4,8 +4,8 @@ import hashlib
 import os
 
 # === Inställningar ===
-URL = "https://exempel.se/produkter"
-SELECTOR = "div.product-list"
+URL = "https://www.webhallen.com/se/product/377253-Pokemon-Scarlet-Violet-10-Destined-Rivals-Booster-Box-36-Boosters"
+SELECTOR = "div.product-top-row"
 HASH_FILE = "last_hash.txt"
 DISCORD_WEBHOOK = os.getenv("DISCORD_WEBHOOK")  # Laddas från GitHub Actions
 
