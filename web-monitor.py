@@ -2,39 +2,63 @@ import requests
 from bs4 import BeautifulSoup
 import hashlib
 import os
+import json
 
-# === Inställningar ===
+# Webbsidan att bevaka
 URL = "https://www.webhallen.com/se/product/377253-Pokemon-Scarlet-Violet-10-Destined-Rivals-Booster-Box-36-Boosters"
-SELECTOR = "div.product-top-row"
-HASH_FILE = "last_hash.txt"
-DISCORD_WEBHOOK = os.getenv("DISCORD_WEBHOOK")  # Laddas från GitHub Actions
+# Fil där vi sparar senaste hash
+HASH_FILE = "status_hash.txt"
+# Discord-webhook (lägg in i GitHub Secrets som DISCORD_WEBHOOK)
+DISCORD_WEBHOOK = os.getenv("DISCORD_WEBHOOK")
 
-def get_page_content():
+def get_availability_status():
     response = requests.get(URL)
     soup = BeautifulSoup(response.text, 'html.parser')
-    content = soup.select_one(SELECTOR)
-    return content.get_text(strip=True) if content else ""
+
+    # Välj knappen som innehåller status
+    button = soup.select_one("button.text-btn")
+    if button and button.find("span"):
+        return button.find("span").get_text(strip=True)
+    else:
+        return "Status ej hittad"
 
 def send_discord_message(message):
-    payload = {"content": message}
-    requests.post(DISCORD_WEBHOOK, json=payload)
+    if not DISCORD_WEBHOOK:
+        print("Ingen Discord-webhook angiven.")
+        return
+
+    payload = {
+        "content": message
+    }
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    response = requests.post(DISCORD_WEBHOOK, data=json.dumps(payload), headers=headers)
+    if response.status_code == 204:
+        print("Notis skickad till Discord.")
+    else:
+        print(f"Fel vid skickande av Discord-notis: {response.status_code} {response.text}")
 
 def main():
-    content = get_page_content()
-    current_hash = hashlib.sha256(content.encode()).hexdigest()
+    current_status = get_availability_status()
+    current_hash = hashlib.sha256(current_status.encode()).hexdigest()
 
+    print(f"Aktuell status: {current_status}")
+    print(f"Hash: {current_hash}")
+
+    previous_hash = ""
     if os.path.exists(HASH_FILE):
-        with open(HASH_FILE, 'r') as file:
-            previous_hash = file.read()
-    else:
-        previous_hash = ''
+        with open(HASH_FILE, 'r') as f:
+            previous_hash = f.read()
 
     if current_hash != previous_hash:
-        send_discord_message(f"🛍️ Förändring upptäckt på: {URL}")
-        with open(HASH_FILE, 'w') as file:
-            file.write(current_hash)
+        print("🟡 Förändring upptäckt!")
+        send_discord_message(f"🔔 Produktstatus har ändrats: {current_status}\n{URL}")
+        with open(HASH_FILE, 'w') as f:
+            f.write(current_hash)
     else:
-        print("Ingen förändring.")
+        print("✅ Ingen förändring.")
 
 if __name__ == "__main__":
     main()
