@@ -34,13 +34,13 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-playwright-
 
-    - name: Cache status-hash
+    - name: Cache status-hashes
       uses: actions/cache@v4
       with:
-        path: status_hash.txt
-        key: status-hash-${{ hashFiles('status_hash.txt') }}
+        path: status_hashes.json
+        key: status-hashes-${{ hashFiles('status_hashes.json') }}
         restore-keys: |
-          status-hash-
+          status-hashes-
 
     - name: Installera beroenden
       run: |
