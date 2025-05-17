@@ -10,7 +10,6 @@ URLS = [
     "https://www.webhallen.com/se/product/377231-Pokemon-Scarlet-Violet-151-Blooming-Waters-Premium-Collection",
     "https://www.webhallen.com/se/product/377238-Pokemon-Scarlet-Violet-9-Journey-Together-Elite-Trainer-Box",
     "https://www.webhallen.com/se/product/376704-Pokemon-Scarlet-Violet-8-5-Prismatic-Evolutions-Booster-Bundle-6-boosters",
-    "https://www.webhallen.com/se/product/377254-Pokemon-Scarlet-Violet-9-Journey-Together-Booster-Box-36-Boosters"
     # Lägg till fler URL:er här om du vill
 ]
 
