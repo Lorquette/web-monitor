@@ -63,6 +63,9 @@ def main():
     for url in URLS:
         print(f"Kollar URL: {url}")
         status = get_availability_status(url)
+        if status == "Status ej hittad":
+            print("⚠️ Status ej hittad – hoppar över.")
+            continue
         current_hash = hashlib.sha256(status.encode()).hexdigest()
         current_hashes[url] = current_hash
 
