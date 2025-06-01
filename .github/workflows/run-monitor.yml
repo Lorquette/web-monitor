@@ -2,7 +2,7 @@ name: Kontrollera produktstatus
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Körs varje timme
+    - cron: '12 * * * *'  # Körs varje timme
   workflow_dispatch:        # Möjlighet att köra manuellt
 
 jobs:
